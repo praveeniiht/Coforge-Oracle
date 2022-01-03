@@ -1,0 +1,10 @@
+Add the following constraints to bank schema
+---------------------------------------------
+1. On Cascade should be applied to all child tables;
+2. occupation must be either service or student or houswife only
+   on the customer_master;
+3. opening_balance must not be less than 1000 on account_master;
+4. transaction_type must be either withdrawal or deposit on the 
+   transaction_details;
+5. allow only cash trasactions on the medium_of_transaction on the
+   transaction_details;

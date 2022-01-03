@@ -1,0 +1,150 @@
+Database Management Systems
+----------------------------
+
+Database Management System is a software that is used to create, 
+maintain and provide controled access to user databses.
+
+Database Management systems should provide systematic method of
+	-> creating the database
+	-> updating the database
+	-> Storing the database
+	-> Retrieving the data from database
+	-> Mainting different levels of security
+
+Expected features of DBMS software
+----------------------------------
+
+1. Enable end user and application programmers to share the data.
+2. Enable data shared among multiple applicaiton.
+3. Should not propagate and store data in new files for every new 
+   application.
+4. Should provide facilty for
+	a. controlling data access
+	b. enforce data integrity
+	c. manage concurrency control
+	d. restoring the data in system failure.
+
+
+Evolution of DBMS
+-----------------
+
+It is introduced in 1960's
+relational model first defined by E.F Codd (IBM) in 1970.
+
+
+Objectives 
+----------
+
+1. Reduce the maintenance cost of software.
+2. Manage the complex data types.
+3. Provide easier and faster access to data even for end user.
+
+
+
+Different Data Models
+---------------------
+1. Flat file DBMS
+2. Hierarchical DBMS
+3. Network Data DBMS
+4. Relational DBMS
+5. Object Relational DBMS
+
+purpose of DataModels
+----------------------
+communicate, describe, investigate, analyze and categorize.
+
+
+
+Database as per Oracle
+----------------------
+
+-> As per oracle database is collection of data in one or more 
+   number of files.
+-> The database is a collection of logical structures and physical structures
+   which are integrated and configured for the integrity of the 
+   system.
+
+
+
+Logical Structures
+-------------------
+
+* In design state the system is represented in the form of Entity 
+  Relational model.
+
+* In the database state is representation of the actual metadata of the 
+  database management system software which will be in the form of tablespaces,
+  data dictionary objects etc.,
+
+CREATE TABLE <TABLENAME> (COL DATTYPE(SIZE),.......);
+
+
+Physical Structures
+-------------------
+
+1. In this the system is represented in the form of tables, 
+   indexes etc.,
+2. Database should have the ability to provide access to external tables for
+   files outside the database, as if the rows in the files were rows in the 
+   table.
+3. Creating structures( Tables and Indexes)
+4. With in the oracle database, the basic structure is a table 
+   used to store data.
+
+
+
+Understanding the oracle sytle for the data storage
+----------------------------------------------------
+
+-> All the logical structures in the datbase must be stored with 
+   in the database only
+-> Oracle maintains a data dictionary, which records metadata 
+   about all the database objects.
+-> The database objects which need physical storages space on the 
+    computer system, are allocated space within the tablespace.
+
+
+Table Space
+-----------
+
+-> It is logical storage unit within oracle database and is not 
+   visible in the filesystem of the machine on which the database 
+   resides.
+
+-> The table space builds the bridge betweeen the oracle database 
+  and the file system in which the table's or index data is stored.
+
+-> A data file can be part of one and only one table space.
+
+-> There are three types of table spaces in oracle
+	1. permanent table space.
+	2. undo table space.
+	3. temporary table space.
+
+Permanent Tablespace
+---------------------
+ permanent tablespace contains persistent schema objects, 
+ Objects in permanent tablespaces are stored in datafiles.
+
+Undo tablespace
+----------------
+An undo tablespace is a type of permanent tablespace used by 
+Oracle Database to manage undo data if you are running your 
+database in automatic undo management mode.
+
+Temporary tablespace
+--------------------
+
+A temporary tablespace contains schema objects only for the 
+duration of a session.
+
+Objects in temporary tablespaces are stored in tempfiles.
+
+
+-> Each table or index stored in an oracle database belongs 
+   to a table space.
+
+-> in 10g or later a big file table space can be created, 
+   which can grow to the size of Tera Bytes of 
+   space in on the disk.
+
