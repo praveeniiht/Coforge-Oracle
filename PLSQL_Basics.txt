@@ -1,0 +1,196 @@
+PL/SQL
+------
+
+select * from emp where dept=10;
+
+
+1. Keywords
+2. Variables
+3. Datatype
+4. identifiers
+
+Any element which is identified in the program
+is called identifer.
+
+identfiers are categoriezed into
+
+1. keywords  - Is an identifer whose meaning is defined by prog.lang
+2. operators
+	a. arthimetic - + - * / ^ :=
+3. variables  -- It is also an identifer which can store diff values
+   of a data type.
+An identifier whose value may change wrt time in the program
+than it is called an variable.
+
+4. constants : An identifer whose value will not be changed
+throught the program.
+
+5. user defined data
+
+Datatype: It is data with which the programming lang is 
+accessed.
+
+number
+varchar
+varchar2
+Date
+DateTime
+CLOB
+BLOB
+
+syntax:
+	varaible_name datatype(size);
+	m1 number(3):=20;
+	m2 number(3):=10;
+	total number(3):=m1+m2;
+	name varchar2(20);
+	m3 varchar(3):='hai';
+	m4 varchar(3):='bye';
+	sum varchar(6):=m3||m4;  // haibye
+        name:='200';  // invalid;
+
+A variable is technically a memory space and holds
+3 informations.
+1. type of data to be stored
+2. range / capcaity of the data
+3. operations that can be performed.
+
+Rules to be followed for naming a varaible
+--------------------------------------------
+1. Every variable should start with alphabet, from second char
+   onwards it can either variable or numeric.
+   name  -->valid
+   1name --- invalid
+   name1 --valid
+   
+ 
+2. It will not allow blank spaces
+   first name ---> invalid
+   firstName ---> valid
+   first_name  --> valid
+
+3. It cannot have any special operators or special characters
+   except underscore  (_)
+   first+name  -- invalid
+    last*  ---invalid
+   first^name --invalid
+
+4. It cannot be a keyword
+   varchar  , number, dbms,output
+   
+Conventions
+------------
+1. every variable name must specify its purpose
+2. whenever your variable need to be with two word combination
+   we have to use either _ or camel case
+   first_name   // firstName
+   last_name    // lastName
+3. if any variable value is not changing frequently better to 
+   define it as constant.
+
+
+The variable applicable on variable will also be applicable 
+for constant, procedure, function, trigger or any other
+valid sql object
+
+
+Pl/sql programs has 3 parts
+1. declaration  -- We will define all the declarations like
+                   variables, constants, cursors etc;
+2. execution part
+		This will actually consists of the programing logic
+		
+3. exception part
+		this will contain the exception handling
+
+structure of pl/sql
+---------------------
+
+DECLARE
+	// DECLARATION PART;
+BEGIN
+	// EXECUTABLE PART;
+EXCEPTION
+	// EXCEPTION PART;
+END;
+
+begin
+
+end;  block  annymous block
+
+To read from keyboard
+  &
+  name varchar(4):='&x';
+
+output statement
+
+dbms_output.put_line()---> method to sent to monitor
+dbms_output.put_line('Hello world'||name);
+|| --concatination operator
+
+
+scanf()  == readvalue from kb
+printf()  === print values from prog to monitor
+
+    
+
+
+    
+
+
+
+set serveroutput on;
+declare
+	name varchar(20):='john';
+	const pi number(7,2):=3.14;
+begin
+	dbms_output.put_line('hello '|| name);
+	name:='kumar';
+	dbms_output.put_line('hello '|| name);
+	pi:=10.11;
+
+end;
+
+
+x=10;
+
+
+
+class Hello{
+	public static void main(String args[]){
+		System.out.println("Hello world");
+	}
+}
+
+
+1. int  -- 
+2. float
+3. double
+4. char
+5. String
+6. class
+
+#include<stdio.h>
+#include<conio.h>
+void main(){
+	printf("Hello world");
+}
+
+
+
+set serveroutput on;
+declare
+   name varchar(10):='&x';
+begin
+   dbms_output.put_line('Hello '||name||' welcome');
+end;
+
+
+
+
+
+
+
+
+
+

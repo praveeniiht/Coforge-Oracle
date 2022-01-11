@@ -1,0 +1,240 @@
+User defined Exceptions
+-----------------------
+we can also create user defined exceptions and can raise
+whenever is necesssary.
+There are 3 parts
+1. Declare
+2. Raise
+3. Handling
+
+declare
+-------
+user_defined_exception exception;
+negative_balance exception;
+
+raise
+-------
+create or replace procedure p1(pempno in number) is
+vname varchar(10);
+vsal number(10);
+begin
+select ename,sal into vname,vsal from emp where empno:=p_empno;
+dbms_output.put_line(vname||' '||vsal);
+end;
+/
+
+
+
+CREATE OR REPLACE PROCEDURE adjust_salary(
+    in_employee_id IN EMP.EMPNO%TYPE,
+    in_percent IN NUMBER
+) IS
+BEGIN
+   -- update employee's salary
+   UPDATE EMP
+   SET sal = sal + sal * in_percent / 100
+   WHERE empno = in_employee_id;
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+begin
+
+
+exception
+	when object1 then
+	statements;
+	when object2 then
+	statements;
+	when others then
+	statement;
+end;
+
+1. cal is eligible for voting-- 18 
+    -18  --- 
+    150 ----- 
+
+
+1. declare the user_defined_exception object of type exception
+2. we should explicitly raise the exception for some condition
+   using raise keyword.
+3. Handle the raised exception using when in exception block
+
+
+sal number(3);
+declare
+	invalid_age exception;
+	insufficent_age exception;
+	age number(3):=&age;
+begin
+	if age < 0  or age >150 then
+		raise invalid_age;
+	elsif age >0 and age <18 then
+		raise insufficent_age;
+	else
+		dbms_output.put_line('Valid age to vote');
+	end if;
+
+exception
+	when invalid_age then
+		dbms_output.put_line('age cannot be negative or more than 150 years');
+	when insufficent_age then
+		dbms_output.put_line('age is not sufficent to vote');
+end;
+
+
+
+
+1. Add the column status to ebill table.
+
+2. check cmr and pmr , if cmr < pmr then raise one 
+   invalid_meterreading exception and set the status to
+   'onhold'
+
+3. check the ctype, if it not in the given list 
+   invalid_category exception and set the status to 
+   'onhold'
+
+
+PRAGMA
+------
+
+The procedure raise_application_error allows you to issue an 
+user-defined error from a code block or stored program.
+
+By using this procedure, you can report errors to the callers instead 
+of returning unhandled exceptions.
+
+raise_application_error(
+    error_number, 
+    message 
+    [, {TRUE | FALSE}]
+);
+
+In this syntax:
+
+    The error_number is a negative integer with the range from 
+    -20999 to -20000.
+    
+    The message is a character string that represents the error message. 
+    Its length is up to 2048 bytes.
+    
+    If the third parameter is FALSE, 
+    the error replaces all previous errors. 
+    If it is TRUE, the error is added to the stack of previous errors.
+
+The raise_application_error belongs to the package DBMS_STANDARD, 
+therefore, you do not need to qualify references to it.
+
+DECLARE
+    credit_limit_exceed EXCEPTION;
+    PRAGMA exception_init(credit_limit_exceed, -20998);
+
+    l_cid     customers.cid%TYPE := &cid;
+    l_credit_limit    customers.credit_limit%TYPE := &credit_limit;
+
+    current_credit customers.credit_limit%TYPE;
+    
+BEGIN
+    -- get customer credit limit
+    SELECT credit_limit INTO current_credit
+    FROM customers  WHERE cid = l_cid;
+    
+    -- raise an exception if the credit limit is exceeded
+    IF l_credit_limit > current_credit THEN
+      //  raise_application_error(-20998,'Credit Limit Exceeded');
+          raise credit_limit_exceed;
+    END IF;
+    
+    dbms_output.put_line('Credit Limit is checked and passed');
+    
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            dbms_output.put_line('Customer with id ' || l_cid || ' does not exist.');
+	
+END;
+/
+
+DECLARE
+    e1 EXCEPTION;
+    PRAGMA exception_init (e1, -20001);
+    e2 EXCEPTION;
+    PRAGMA exception_init (e2, -20002);
+    e3 EXCEPTION;
+    PRAGMA exception_init (e2, -20003);
+    l_input NUMBER := &input_number;
+BEGIN
+    -- inner block
+    BEGIN
+        IF l_input = 1 THEN
+            raise_application_error(-20001,'Exception: the input number is 1');
+        ELSIF l_input = 2 THEN
+            raise_application_error(-20002,'Exception: the input number is 2');
+        ELSE
+            raise_application_error(-20003,'Exception: the input number is not 1 or 2');
+        END IF;
+    -- exception handling of the inner block
+    EXCEPTION
+        WHEN e1 THEN 
+            dbms_output.put_line('Handle exception when the input number is 1');
+    END;
+    -- exception handling of the outer block
+    EXCEPTION 
+        WHEN e2 THEN
+            dbms_output.put_line('Handle exception when the input number is 2');
+END;
+/
+
+
+
+declare
+	excep1 exception;
+	excep2 exception;
+begin
+	if condtion1 then
+		raise excep1;
+		statement-1;
+	end if;
+	if condtion2 then
+		raise excep2;
+		statement-2;
+	end if;
+	update ebill set status='active'where mno:=mno;
+end;
+exception
+	when excep1 then
+		update ebill set status='onhold'where mno:=mno;
+	when excep2 then
+		update ebill set status='onhold'where mno:=mno;
+end;
+
+
+
+
+DECLARE
+    credit_limit_exceed EXCEPTION;
+    PRAGMA exception_init(credit_limit_exceed, -20998);
+  
+BEGIN
+        
+    -- raise an exception if the credit limit is exceeded
+    IF 10 > 9 THEN
+              raise_application_error(-20998,'Credit Limit Exceeded');
+    END IF;
+    
+    dbms_output.put_line('Credit Limit is checked and passed');
+
+exception
+	when credit_limit_exceed then
+		dbms_output.put_line('Exception is handled');
+END;
+/
