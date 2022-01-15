@@ -1,0 +1,334 @@
+TYPE <RECORD_NAME> IS RECORD
+( 
+  DECLARE THE VARIBALES;
+);
+
+VARIABLE_NAME RECORD_NAME;
+
+
+
+
+
+DECLARE
+TYPE emp_det IS RECORD
+(
+EMP_NO NUMBER, 
+EMP_NAME VARCHAR2(150),
+MANAGER NUMBER, 
+SALARY NUMBER
+);
+emp_rec emp_det;
+BEGIN
+emp_rec.emp_no:= 1001;	
+emp_rec.emp_name:='XXX';	
+emp_rec.manager:= 1000;	
+emp_rec.salary:=10000;	
+dbms_output.put_line('Employee Detail');
+dbms_output.put_line ('Employee Number: '||emp_rec.emp_no); 
+dbms_output.put_line ('Employee Name: '||emp_rec.emp_name); 
+dbms_output.put_line ('Employee Salary: ' ||emp_rec.salary); 
+dbms_output.put_line ('Employee Manager Number: '||emp_rec.manager);
+END;
+/
+
+create or replace procedure emporders is
+
+cursor empcursor is select mc.cid, mc.name,mo.oid,mo.odate from martcustomers mc 
+inner join martorders mo on mc.cid = mo.cid;
+
+TYPE emp_orders IS RECORD
+(
+cid NUMBER, 
+name VARCHAR(20),
+oid NUMBER, 
+odate date
+);
+emprec emp_orders;
+
+begin
+	open empcursor;
+	loop
+		fetch empcursor into emprec;
+		dbms_output.put_line(emprec.cid||' '||emprec.name||' '||emprec.oid||' '||emprec.odate);
+		exit when empcursor%notfound;
+	end loop;
+end;
+
+
+NVL()
+-----
+NVL(expr1, expr2) : In SQL, NVL() converts a null value to an 
+actual value. Data types that can be used are date, character and 
+number. 
+Data type must match with each other i.e. expr1 and expr2 must of 
+same data type.
+
+Syntax –
+NVL (expr1, expr2)
+expr1 is the source value or expression that may contain a null.
+expr2 is the target value for converting the null.
+
+SELECT  sal, sal+NVL(comm, 0) Net salary FROM emp;
+
+
+NVL2()
+-------
+NVL2(expr1, expr2, expr3) : 
+The NVL2 function examines the first expression. 
+If the first expression is not null, 
+then the NVL2 function returns the second expression. 
+If the first expression is null, then the third expression is 
+returned i.e. If expr1 is not null, NVL2 returns expr2. 
+
+If expr1 is null, NVL2 returns expr3. 
+The argument expr1 can have any data type.
+
+Syntax –
+NVL2 (expr1, expr2, expr3)
+expr1 is the source value or expression that may contain null
+expr2 is the value returned if expr1 is not null
+expr3 is the value returned if expr1 is null
+
+
+COALESCE() : The COALESCE() function examines the first expression, 
+if the first expression is not null, it returns that expression; 
+
+Otherwise, it does a COALESCE of the remaining expressions.
+The advantage of the COALESCE() function over the NVL() function 
+is that the COALESCE function can take multiple alternate values. 
+In simple words COALESCE() function returns the first non-null 
+expression in the list.
+
+Syntax –
+COALESCE (expr_1, expr_2, ... expr_n)
+
+SELECT last_name, 
+    COALESCE(commission_pct, salary, 10) comm
+    FROM employees ORDER BY commission_pct;
+
+Extract()
+----------
+The EXTRACT() function returns the value of the field of the source.
+You can extract YEAR, MONTH, DAY from a DATE value by using the EXTRACT() function.
+
+SELECT   EXTRACT( YEAR FROM TO_DATE( '31-Dec-1999 15:30:20 ',  
+		 'DD-Mon-YYYY HH24:MI:SS' ) ) YEAR  FROM   DUAL;
+
+
+Extracting month from a date:
+-----------------------------
+SELECT
+  EXTRACT( MONTH FROM TO_DATE( '31-Dec-1999 15:30:20 ',  'DD-Mon-YYYY HH24:MI:SS' ) ) MONTH
+FROM
+  DUAL;
+
+
+Extracting day from a date:
+---------------------------
+SELECT
+  EXTRACT( DAY FROM TO_DATE( '31-Dec-1999 15:30:20 ',  'DD-Mon-YYYY HH24:MI:SS' ) ) DAY
+FROM
+  DUAL;
+
+Extraction Year or month from interval
+--------------------------------------
+SELECT
+  EXTRACT( YEAR FROM INTERVAL '5-2' YEAR TO MONTH )
+FROM
+  DUAL;
+
+SELECT
+  EXTRACT( MONTH FROM INTERVAL '5-2' YEAR TO MONTH )
+FROM
+  DUAL;
+
+Extracting fields from INTERVAL DAY TO SECOND values
+----------------------------------------------------
+SELECT
+  EXTRACT( DAY FROM INTERVAL '5 04:30:20.11' DAY TO SECOND )
+FROM
+  dual;
+
+Extract hour from an interval
+
+SELECT
+  EXTRACT( HOUR FROM INTERVAL '5 04:30:20.11' DAY TO SECOND )
+FROM
+  dual;
+
+Extract minute from an interval
+
+SELECT
+  EXTRACT( MINUTE FROM INTERVAL '5 04:30:20.11' DAY TO SECOND )
+FROM
+  dual;
+Extract second from an interval
+
+SELECT
+  EXTRACT( SECOND FROM INTERVAL '5 04:30:20.11' DAY TO SECOND )
+FROM
+  dual;  
+
+
+Extracting fields from TIMESTAMP values
+----------------------------------------
+Extracting year from a timestamp:
+
+SELECT
+  EXTRACT( YEAR FROM TIMESTAMP '1999-12-31 23:59:59.10' )
+FROM
+  dual;
+
+Extracting month from a timestamp:
+
+SELECT
+  EXTRACT( MONTH FROM TIMESTAMP '1999-12-31 23:59:59.10' )
+FROM
+  dual;
+
+Extracting day from a timestamp:
+
+SELECT
+  EXTRACT( DAY FROM TIMESTAMP '1999-12-31 23:59:59.10' )
+FROM
+  dual;  
+
+
+Extracting hour from a timestamp:
+
+SELECT
+  EXTRACT( HOUR FROM TIMESTAMP '1999-12-31 23:59:59.10' )
+FROM
+  dual;    
+
+Extracting minute from a timestamp:
+
+SELECT
+  EXTRACT( MINUTE FROM TIMESTAMP '1999-12-31 23:59:59.10' )
+FROM
+  dual;      
+
+Extracting second from a timestamp:
+
+SELECT
+  EXTRACT( SECOND FROM TIMESTAMP '1999-12-31 23:59:59.10' )
+FROM
+  dual;       
+
+
+Extracting from tables;
+----------------------
+Orders(oid,cid,status,salesmenId,Order_date)
+SELECT 
+    EXTRACT(year FROM order_date) year,
+    EXTRACT(month FROM order_date) month,
+    COUNT(order_id) order_count
+FROM orders
+GROUP BY 
+     EXTRACT(YEAR FROM order_date),
+    EXTRACT(MONTH FROM order_date)
+ORDER BY year DESC, month;
+
+year month order_count
+2017 	1 	5
+2017 	2 	7
+2016 	5 	8
+
+Global Temporary Tables
+------------------------
+Applications often use some form of temporary data store for 
+processes that are to complicated to complete in a single pass. 
+
+Often, these temporary stores are defined as database tables or 
+PL/SQL tables. 
+
+From Oracle 8i onward, the maintenance and management of temporary
+tables can be delegated to the server by using Global Temporary 
+Tables.
+
+Temporary Tables
+-----------------
+Oracle support two types of temporary tables.
+
+Global Temporary Tables : Available since Oracle 8i and subject of
+this article.
+
+Private Temporary Tables : Available since Oracle 18c. 
+Discussed here.
+
+
+Creation of Global Temporary Tables
+------------------------------------
+The data in a global temporary table is private, such that data 
+inserted by a session can only be accessed by that session. 
+
+The session-specific rows in a global temporary table can be 
+preserved for the whole session, or just for the current 
+transaction.
+
+In contrast, the ON COMMIT PRESERVE ROWS clause indicates that 
+rows should persist beyond the end of the transaction. 
+
+They will only be removed at the end of the session.
+
+The ON COMMIT DELETE ROWS clause indicates the data should be 
+deleted at the end of the transaction, or the end of the session.
+
+CREATE GLOBAL TEMPORARY TABLE my_temp_table (
+  id           NUMBER,
+  description  VARCHAR2(20)
+)
+ON COMMIT DELETE ROWS;
+
+-- Insert, but don't commit, then check contents of GTT.
+INSERT INTO my_temp_table VALUES (1, 'ONE');
+
+SELECT COUNT(*) FROM my_temp_table;
+
+  COUNT(*)
+----------
+         1
+
+SQL>
+
+-- Commit and check contents.
+COMMIT;
+
+SELECT COUNT(*) FROM my_temp_table;
+
+  COUNT(*)
+----------
+         0
+
+In contrast, the ON COMMIT PRESERVE ROWS clause indicates that 
+rows should persist beyond the end of the transaction. 
+
+They will only be removed at the end of the session.
+
+CREATE GLOBAL TEMPORARY TABLE my_temp_table (
+  id           NUMBER,
+  description  VARCHAR2(20)
+)
+ON COMMIT PRESERVE ROWS;
+
+-- Insert and commit, then check contents of GTT.
+INSERT INTO my_temp_table VALUES (1, 'ONE');
+COMMIT;
+
+SELECT COUNT(*) FROM my_temp_table;
+
+  COUNT(*)
+----------
+         1
+
+SQL>
+
+-- Reconnect and check contents of GTT.
+CONN test/test
+
+SELECT COUNT(*) FROM my_temp_table;
+
+  COUNT(*)
+----------
+         0
+
