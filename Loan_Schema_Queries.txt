@@ -1,0 +1,50 @@
+1. Write a query to display the employee id, employee name and total valuation for employee who 
+has issued maximum total valuation of the product. Give the alias name for total valuation as 
+TOTAL_VALUATION.[Hint: Suppose an employee E00019 issued item of price 5000, 10000, 12000 and 
+E00020 issue item of price 2000, 7000, and 1000. So the valuation of items taken by E00019 is 27000 
+and for E00020 it is 10000. So the employee id, employee name and total valuation of E00019 should 
+display. ]
+
+
+2. Write a query to display issue id, employee id, employee name, item id, item description and issue 
+date. Display the data in descending order of date and then by issue id in ascending order.
+
+3.Write a query to display the employee id, employee name who have not issued with any item in 
+the year 2013. Hint: Exclude those employees who was never issued with any of the items in all the 
+years. Display the records sorted in ascending order based on employee id.
+
+
+4. Write a query to display the employee id, employee name, card issue date and card valid 
+date.Order by employee name and then by card valid date. Give the alias name to display the card 
+valid date as CARD_VALID_DATE.[Hint: Validity in years for the loan card is given in loan_card_master 
+table. Validity date is calculated by adding number of years in the loan card issue date. If the duration 
+of year is zero then display AS 'No Validity Date'. ]
+
+5. Write a query to display the employee id, employee name andtotal valuationfor the employees 
+who has issued minimum total valuation of the product. Give the alias name for total valuation as 
+TOTAL_VALUATION.[Hint: Suppose an employee E00019 issued item of price 5000, 10000, 12000 and 
+E00020 issue item of price 2000, 7000 and 1000. So the valuation of items taken by E00019 is 27000 
+and for E00020 it is 10000. So the employee id, employee name of E00020 should be displayed. 
+
+6. Write a query to display the item id , item description which was never issued to any employee. 
+Display the records sorted in ascending order based on item id.
+
+
+7. Write a query to display the employee id, employee name and count of item category of the 
+employees who have been issued items in at least 2 different categories.Give the alias name for 
+category count as COUNT_CATEGORY.Display the records sorted in ascending order based on 
+employee id.
+
+8. Write a query to display employee id, employee name, item id and item description of employees 
+who were issued item(s) in the month of January 2013. Display the records sorted in order based on 
+employee id and then by item id in ascending order.
+
+
+9.  Write a query to find the number of items in each category, make and description. The Query 
+should display Item Category, Make, description and the number of items as No_of_Items. Display the 
+records in ascending order based on Item Category, then by item make and then by item description.
+
+10. . Write a query to get the number of items of the furniture category issued and not issued. The 
+query should display issue status and the number of furniture as No_of_Furnitures.Display the records 
+sorted in ascending order based on issue_status.
+
