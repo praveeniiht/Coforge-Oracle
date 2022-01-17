@@ -1,0 +1,132 @@
+FlashBack
+----------
+Oracle Flashback Technology is a group of Oracle Database features
+that let you view past states of database objects or to return 
+database objects to a previous state without using point-in-time 
+media recovery.
+
+Flashback Query allows users to see the view of past data, 
+If in case some data or table is being deleted by the user, 
+then the flashback query provides us an opportunity to view 
+that data again and perform manipulations over it.
+
+
+With flashback features, you can:
+
+1. Perform queries that return past data
+
+2. Perform queries that return metadata that shows a detailed 
+   history of changes to the database
+
+3. Recover tables or rows to a previous point in time
+
+4. Automatically track and archive transactional data changes
+
+5. Roll back a transaction and its dependent transactions while 
+    the database remains online
+
+EXECUTE Dbms_Flashback.Enable_At_System_Change_Number(647392649);
+EXECUTE Dbms_Flashback.Enable_At_Time('16-Jan-2022 11:00:00'); 
+
+
+Limitations Flashback Query :
+-----------------------------
+1. Flashback query only works on those systems which supports 
+   automatic undo management.
+2. Systems having traditional approach of rollback does not 
+   supports flashback query.
+3. We can not use DDL (Data Definition Language) or 
+   DML (Data Manipulation Language) while performing flashback 
+   query.
+4. Flashback query does not reverse the 
+   DDL(Data Definition Language) commands.
+
+5. Flashback query can perform manipulations in 
+   DDL(Data Definition Language) commands.
+
+6. We can not apply flashback queries on functions, Packages, 
+   Procedures and triggers.
+
+
+Dynamic SQL
+------------
+Dynamic SQL is a programming technique that enables you to build 
+SQL statements dynamically at runtime. You can create more 
+general purpose, flexible applications by using dynamic SQL 
+because the full text of a SQL statement may be unknown at 
+compilation. 
+
+For example, dynamic SQL lets you create a procedure that 
+operates on a table whose name is not known until runtime. 
+
+
+DECLARE 
+@var1 NVARCHAR(MAX), 
+@var2 NVARCHAR(MAX);
+begin
+SET @var1 = N'table_name';
+SET @var2= N'SELECT * FROM ' + @var1;
+EXEC sp_executesql @var2;
+end;
+
+
+
+PURGE
+-----
+Use the PURGE statement to remove a table or index from your 
+recycle bin and release all of the space associated with the 
+object, or to remove the entire recycle bin, or to remove part 
+of all of a dropped tablespace from the recycle bin.
+
+SELECT * FROM RECYCLEBIN;
+SELECT * FROM USER_RECYCLEBIN;
+
+Prerequisites
+
+The database object must reside in your own schema or you must 
+have the DROP ANY... system privilege for the type of object to 
+be purged, or you must have the SYSDBA system privilege.
+
+PURGE TABLE test;
+
+
+Virtual Column
+---------------
+syntax:
+column_name [datatype] [generated always] as (expression) 
+[virtual]
+
+create table tt1 (
+  id              number,
+  product         varchar2(50),
+  price           number(10,2),
+  price_with_tax  number(10,2) generated always as 
+  (round(price*1.2,2))  virtual
+);
+
+insert into tt1 (id, product, price) values (1, 'computer', 1500);
+insert into tt1 (id, product, price) values (2, 'bike', 1000);
+commit;
+
+To Alter Virtual Column
+-----------------------
+alter table t1 modify (
+  price_with_tax number(10,2) as (round(price*1.3,2))
+);
+
+To Drop Virtual Column
+-----------------------
+alter table t1 drop column price_with_tax;
+
+To Add Virtual Colum to existing column
+---------------------------------------
+alter table t1 add (
+  price_with_tax number(10,2) as (round(price*1.2,2)) virtual
+);
+
+Creating a view on tables with virtual columns
+-----------------------------------------------
+select column_id, column_name, virtual_column, data_default
+from   user_tab_cols
+where  table_name = 'T1'
+order by column_id;
