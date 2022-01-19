@@ -1,0 +1,42 @@
+Multi Table Insert and Update
+------------------------------
+Sales(prodid,prodname,Mon_amt,tue_amt,wed_amt,thu_amt,fri_amt,
+sat_amt)
+
+Weekly_sales(prodid,prodname,weekday,amount)
+
+
+Insert all
+     Into week_sales(prodid,prodname,weekday,amount)
+     Values (prodid,prodname,’Mon’,mon_amt)
+     Into week_sales(prodid,prodname,weekday,amount)
+     Values (prodid,prodname,’Tue’,tue_amt)
+     Into week_sales(prodid,prodname,weekday,amount)
+     Values (prodid,prodname,’Wed’,wed_amt)
+     Into week_sales(prodid,prodname,weekday,amount)
+     Values (prodid,prodname,’Thu’,thu_amt)
+     Into week_sales(prodid,prodname,weekday,amount)
+     Values (prodid,prodname,’Fri’,fri_amt)
+     Into week_sales(prodid,prodname,weekday,amount)
+     Values (prodid,prodname,’Sat’,sat_amt)
+        Select prodid,prodname,mon_amt,tue_amt,wed_amt,thu_amt
+            Fri_amt,sat_amt from sales;
+
+
+Merge
+------
+Sales(prod,month,amount)
+sales_history(prod,month,amount)
+
+Now we want to update sales_history table from sales table i.e. 
+those rows which are already present in sales_history, their 
+amount should be updated and those rows which are not present in 
+sales_history table should be inserted.
+
+merge into sales_history sh
+   using sales s
+   on (s.prod=sh.prod and s.month=sh.month)
+    when matched then update set sh.amount=s.amount
+     when not matched then insert values (prod,month,amount);
+
+

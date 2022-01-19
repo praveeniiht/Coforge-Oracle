@@ -1,0 +1,756 @@
+Collections: Array, Structures and Unions
+Java: Collections, Class, Array
+
+PL/SQL
+
+1. Record
+2. Associative Array  or index by table
+3. Nested Tables
+
+
+
+CREATE OR REPLACE MY_REC  AS RECROD
+(
+  VAR1 DATYPE
+  VAR2 DATATYPE
+;
+;
+);
+
+TYPE TEMP MY_REC;
+
+
+
+
+Associative arrays are single-dimensional, unbounded, sparse 
+collections of homogeneous elements.
+
+First, an associative array is single-dimensional. 
+It means that an associative array has a single column of data 
+in each row, which is similar to a one-dimension array.
+
+Second, an associative array is unbounded, meaning that it has a 
+predetermined limits number of elements.
+
+Third, an associative array is sparse because its elements are 
+not sequential. In other words, an associative array may have gaps 
+between elements.
+
+Finally, an associative array has elements which have the 
+same data type, or we call them homogenous elements.
+
+An associative array can be indexed by numbers or characters.
+
+TYPE associative_array_type 
+    IS TABLE OF datatype [NOT NULL]
+    INDEX BY index_type;
+
+In this syntax:
+1. The associative_array_type is the name of the associative array type.
+2. The datatype is the data type of the elements in the array.
+3. The index_type is the data type of the index used to organize 
+   the elements in the array.
+4. Optionally, you can specify NOT NULL to force every element in 
+   the array must have a value.
+
+eg:
+TYPE t_capital_type 
+    IS TABLE OF VARCHAR2(100) 
+    INDEX BY VARCHAR2(50);
+
+associative_array associative_array_type 
+name varchar2(20);
+
+t_capital t_capital_type;
+
+int a[5];
+
+printf(a[3]);
+
+Accessing array elements :
+--------------------------
+l_index := array_name.FIRST;
+
+WHILE l_index IS NOT NULL LOOP
+    -- access the array element
+    -- array_name(l_index)
+    l_index := array_name.NEXT(l_index);
+END LOOP;
+
+
+example
+--------
+DECLARE
+    -- declare an associative array type
+    TYPE t_capital_type 
+        IS TABLE OF VARCHAR2(100) 
+        INDEX BY VARCHAR2(50);
+
+    -- declare a variable of the t_capital_type
+    t_capital t_capital_type;
+    employees: ibmemployeetype.extend(5)	;
+
+    -- local variable
+    l_country VARCHAR2(50);
+BEGIN
+    
+    t_capital('America')            := 'Washington, D.C.';
+    t_capital('United Kingdom') := 'London';
+    t_capital('Japan')          := 'Tokyo';
+    
+    l_country := t_capital.FIRST;
+    
+    WHILE l_country IS NOT NULL LOOP
+        dbms_output.put_line('The capital of ' || 
+            l_country || 
+            ' is ' || 
+            t_capital(l_country));
+        l_country := t_capital.NEXT(l_country);
+    END LOOP;
+END;
+/
+
+Nested Tables
+--------------
+Nested tables are single-dimensional, unbounded collections of 
+homogeneous elements.
+
+-> First, a nested table is single-dimensional, meaning that each 
+   row has a single column of data like a one-dimension array.
+-> Second, a nested table is unbounded. It means that the number 
+   of elements of a nested table is predetermined.
+-> Third, homogeneous elements mean that all elements of a nested
+   table have the same data type.
+syntax:
+
+TYPE nested_table_type 
+    IS TABLE OF element_datatype [NOT NULL];
+
+nested_table_variable nested_table_type;
+
+It is possible to create a nested table type located in the 
+database:
+
+CREATE [OR REPLACE] TYPE nested_table_type // abc
+    IS TABLE OF element_datatype [NOT NULL];
+
+
+
+
+
+Initializing a nested table
+----------------------------
+nested_table_variable := nested_table_type();
+temp :=abc();
+temp.extend(5)
+
+
+Add elements to a nested table
+nested_table_variable.EXTEND;
+
+To add mutiple values
+----------------------
+nested_table_variable.EXTEND(n);
+
+nested_table_variable := element_1;
+nested_table_variable := element_2;
+..
+nested_table_variable := element_n;
+
+example
+-------
+DECLARE
+    -- declare a cursor that return customer name
+    CURSOR c_emp IS 
+        SELECT ename 
+        FROM emp
+        ORDER BY ename 
+        FETCH FIRST 10 ROWS ONLY;
+    -- declare a nested table type   
+    TYPE t_emp_name_type 
+        IS TABLE OF emp.ename%TYPE;
+    
+    -- declare and initialize a nested table variable
+    t_emp_names t_emp_name_type := t_emp_name_type(); 
+    
+BEGIN
+    -- populate customer names from a cursor
+    FOR r_emp IN c_emp
+    LOOP
+        t_emp_names.EXTEND;
+        t_emp_names(t_emp_names.LAST) := r_emp.ename;
+    END LOOP;
+    
+    -- display customer names
+    FOR l_index IN t_emp_names.FIRST..t_emp_names.LAST 
+    LOOP
+        dbms_output.put_line(t_emp_names(l_index));
+    END LOOP;
+END;
+
+
+
+FlashBack
+----------
+Oracle Flashback Technology is a group of Oracle Database features
+that let you view past states of database objects or to return 
+database objects to a previous state without using point-in-time 
+media recovery.
+
+Flashback Query allows users to see the view of past data, 
+If in case some data or table is being deleted by the user, 
+then the flashback query provides us an opportunity to view 
+that data again and perform manipulations over it.
+
+
+With flashback features, you can:
+
+1. Perform queries that return past data
+
+2. Perform queries that return metadata that shows a detailed 
+   history of changes to the database
+
+3. Recover tables or rows to a previous point in time
+
+4. Automatically track and archive transactional data changes
+
+5. Roll back a transaction and its dependent transactions while 
+    the database remains online
+
+EXECUTE Dbms_Flashback.Enable_At_System_Change_Number(647392649);
+EXECUTE Dbms_Flashback.Enable_At_Time('16-Jan-2022 11:00:00'); 
+
+
+Limitations Flashback Query :
+-----------------------------
+1. Flashback query only works on those systems which supports 
+   automatic undo management.
+2. Systems having traditional approach of rollback does not 
+   supports flashback query.
+3. We can not use DDL (Data Definition Language) or 
+   DML (Data Manipulation Language) while performing flashback 
+   query.
+4. Flashback query does not reverse the 
+   DDL(Data Definition Language) commands.
+
+5. Flashback query can perform manipulations in 
+   DDL(Data Definition Language) commands.
+
+6. We can not apply flashback queries on functions, Packages, 
+   Procedures and triggers.
+
+
+Dynamic SQL
+------------
+Dynamic SQL is a programming technique that enables you to build 
+SQL statements dynamically at runtime. You can create more 
+general purpose, flexible applications by using dynamic SQL 
+because the full text of a SQL statement may be unknown at 
+compilation. 
+
+For example, dynamic SQL lets you create a procedure that 
+operates on a table whose name is not known until runtime. 
+
+PL/SQL provides two ways to write dynamic SQL
+
+    NDS – Native Dynamic SQL - Using EXECUTE IMMEDIATE
+    DBMS_SQL
+
+syntax of EXECUTE IMMEDIATE
+
+EXECUTE IMMEDIATE(<SQL>)
+[INTO<variable>]
+[USING <bind_variable_value>]
+
+
+DECLARE
+lv_sql VARCHAR2(500);
+lv_emp_name VARCHAR2(50);
+tempno NUMBER(5);
+ln_salary NUMBER(7,2);
+ln_manager NUMBER(4);
+tid number(5):=&tid;
+BEGIN
+lv_sql:='SELECT ename,empno,sal,mgr FROM emp WHERE empno=:empno';
+EXECUTE IMMEDIATE lv_sql INTO lv_emp_name,tempno,ln_salary,ln_manager USING tid;
+dbms_output.put_line('Employee Name:'||lv_emp_name);
+dbms_output.put_line('Employee Number:'||tempno);
+dbms_output.put_line('Salary:'||ln_salary);
+dbms_output.put_line('Manager ID:'||ln_manager);
+END;
+/
+
+
+DBMS_SQL for Dynamic SQL
+
+PL/SQL provide the DBMS_SQL package that allows you to work with dynamic SQL. 
+The process of creating and executing the dynamic SQL contains the following process.
+
+1. OPEN CURSOR: The dynamic SQL will execute in the same way as a cursor. So in order to execute the SQL 
+                statement, we must open the cursor.
+
+2. PARSE SQL: The next step is to parse the dynamic SQL. This process will just check the syntax and 
+              keep the query ready to execute.
+
+3. BIND VARIABLE Values: The next step is to assign the values for bind variables if any.
+
+4. DEFINE COLUMN: The next step is to define the column using their relative positions in the select statement.
+
+5. EXECUTE: The next step is to execute the parsed query.
+
+6. FETCH VALUES: The next step is to fetch the executed values.
+    
+7. CLOSE CURSOR: Once the results are fetched, the cursor should be closed.
+
+DECLARE
+lv_sql VARCHAR2(500);
+lv_emp_name VARCHAR2(50);
+ln_emp_no NUMBER;
+ln_salary NUMBER;
+ln_manager NUMBER;
+ln_cursor_id NUMBER;
+ln_rows_processed number;
+BEGIN
+lv_sql:='SELECT emp_name,emp_no,salary,manager FROM emp WHERE emp_no=:empmo';
+ln_cursor_id:=DBMS_SQL.OPEN_CURSOR;
+
+DBMS_SQL.PARSE(ln_cursor_id,lv_sql,DBMS_SQL.NATIVE);
+
+DBMS_SQL.BIND_VARLABLE(ln_cursor_id,':empno',1001);
+
+DBMS_SQL.DEFINE_COLUMN(ln_cursor_id,1,ln_emp_name);
+DBMS_SQL.DEFINE_COLUMN(ln_cursor_id,2,ln_emp_no);
+DBMS_SQL .DEFINE_COLUMN(ln_cursor_id,3,ln_salary);
+DBMS_SQL .DEFINE_COLUMN(ln_cursor_id,4,ln_manager);
+ln_rows__processed:=DBMS_SQL.EXECUTE(ln_cursor_id);
+LOOP
+IF DBMS_SQL.FETCH_ROWS(ln_cursor_id)=0
+THEN
+EXIT;
+ELSE
+DBMS_SQL.COLUMN_VALUE(ln_cursor_id,1,lv_emp_name); 
+DBMS_SQL.COLUMN_VALUE(ln_cursor_id,2,ln_emp_no);
+DBMS_SQL.COLUMN_VALUE(ln_cursor_id,3,In_salary);
+DBMS_SQL.COLUMN_VALUE(ln_cursor_id,4,In_manager);
+Dbms_output.put_line('Employee Name:'||lv_emp_name); 
+Dbms_output.put_line('Employee Number:l'||ln_emp_no); 
+Dbms_output.put_line('Salary:'||ln_salary); 
+Dbms_output.put_line('Manager ID :'||ln_manager);
+END IF;
+END LOOP;
+
+DBMS_SQL.CLOSE_ClIRSOR(ln_cursor_id);
+
+END;
+/
+
+
+
+PURGE
+-----
+Use the PURGE statement to remove a table or index from your 
+recycle bin and release all of the space associated with the 
+object, or to remove the entire recycle bin, or to remove part 
+of all of a dropped tablespace from the recycle bin.
+
+SELECT * FROM RECYCLEBIN;
+SELECT * FROM USER_RECYCLEBIN;
+
+Prerequisites
+
+The database object must reside in your own schema or you must 
+have the DROP ANY... system privilege for the type of object to 
+be purged, or you must have the SYSDBA system privilege.
+
+PURGE TABLE test;
+
+
+Virtual Column
+---------------
+syntax:
+column_name [datatype] [generated always] as (expression) 
+[virtual]
+
+create table tt1 (
+  id              number,
+  product         varchar2(50),
+  price           number(10,2),
+  price_with_tax  number(10,2) generated always as 
+  (round(price*1.2,2))  virtual
+);
+
+insert into tt1 (id, product, price) values (1, 'computer', 1500);
+insert into tt1 (id, product, price) values (2, 'bike', 1000);
+commit;
+
+To Alter Virtual Column
+-----------------------
+alter table t1 modify (
+  price_with_tax number(10,2) as (round(price*1.3,2))
+);
+
+To Drop Virtual Column
+-----------------------
+alter table t1 drop column price_with_tax;
+
+To Add Virtual Colum to existing column
+---------------------------------------
+alter table t1 add (
+  price_with_tax number(10,2) as (round(price*1.2,2)) virtual
+);
+
+Creating a view on tables with virtual columns
+-----------------------------------------------
+select column_id, column_name, virtual_column, data_default
+from   user_tab_cols
+where  table_name = 'T1'
+order by column_id;
+
+
+Read Only Tables
+-----------------
+alter table table_name read only;
+alter table table_name read write;
+
+drop table ro_tab purge;
+
+create table ro_tab (
+  id  number
+);
+
+insert into ro_tab values (1);
+alter table ro_tab read only;
+
+SQL> alter table ro_tab read write;
+
+Table altered.
+
+SQL> delete from ro_tab;
+
+1 row deleted.
+
+
+Pivot in Oracle
+---------------
+Oracle 11g introduced the new PIVOT clause that allows you to 
+write cross-tabulation queries which transpose rows into columns, 
+aggregating data in the process of the transposing. 
+
+As a result, the output of a pivot operation returns more columns 
+and fewer rows than the starting data set.
+
+Syntax:
+-------
+SELECT 
+    select_list
+FROM 
+    table_name
+PIVOT [XML] ( 
+    pivot_clause
+    pivot_for_clause
+    pivot_in_clause 
+);
+
+In this syntax, following the PIVOT keyword are three clauses:
+
+1. pivot_clause specifies the column(s) that you want to aggregate. 
+   The pivot_clause performs an implicitly GROUP BY based on all columns 
+   which are not specified in the clause, along with values provided by 
+   the pivot_in_clause.
+
+2. pivot_for_clause specifies the column that you want to group or pivot.
+
+3. pivot_in_clause defines a filter for column(s) in the pivot_for_clause.
+   The aggregation for each value in the pivot_in_clause will be rotated 
+   into a separate column.
+
+eg.
+CREATE VIEW order_stats AS
+SELECT 
+    category_name, 
+    status, 
+    order_id
+FROM 
+    order_items
+INNER JOIN orders USING (order_id)
+INNER JOIN products USING (product_id)
+INNER JOIN product_categories USING (category_id);
+
+SELECT * FROM order_stats;
+
+Ref: https://www.oracletutorial.com/oracle-basics/oracle-pivot/
+
+Compound Triggers
+------------------
+The compound trigger is useful when you want to accumulate facts 
+that characterise the “for each row” changes and then act on them 
+as a body at “after statement” time. Two popular reasons to use 
+compound trigger are:
+
+1. To accumulate rows for bulk-insertion.     
+2. To avoid the infamous ORA-04091: mutating-table error.
+emp---> t1(before statement), t2(before for each row)
+         t3(after statement), t4 (after for each row)
+
+before statement  -- before for each row -- after for each row
+-- after statement
+
+
+CREATE OR REPLACE TRIGGER compound_trigger_name
+FOR [INSERT|DELETE]UPDATE [OF column] ON table
+COMPOUND TRIGGER
+   -- Declarative Section (optional)
+   -- Variables declared here have firing-statement duration.
+     
+     --Executed before DML statement
+     BEFORE STATEMENT IS
+     BEGIN
+       NULL;
+     END BEFORE STATEMENT;
+   
+     --Executed before each row change- :NEW, :OLD are available
+     BEFORE EACH ROW IS
+     BEGIN
+       NULL;
+     END BEFORE EACH ROW;
+   
+     --Executed aftereach row change- :NEW, :OLD are available
+     AFTER EACH ROW IS
+     BEGIN
+       NULL;
+     END AFTER EACH ROW;
+   
+     --Executed after DML statement
+     AFTER STATEMENT IS
+     BEGIN
+       NULL;
+     END AFTER STATEMENT;
+
+END compound_trigger_name;
+
+
+example
+--------
+--Trigger
+CREATE OR REPLACE TRIGGER aud_emp
+FOR INSERT OR UPDATE
+ON emp
+COMPOUND TRIGGER
+  
+  TYPE t_emp_changes       IS TABLE OF aud_emp%ROWTYPE INDEX BY SIMPLE_INTEGER;
+  v_emp_changes            t_emp_changes;
+  
+  v_index                  SIMPLE_INTEGER       := 0;
+  v_threshhold    CONSTANT SIMPLE_INTEGER       := 1000; --maximum number of rows to write in one go.
+  v_user          VARCHAR2(50); --logged in user
+  
+  PROCEDURE flush_logs
+  IS
+    v_updates       CONSTANT SIMPLE_INTEGER := v_emp_changes.count();
+  BEGIN
+
+    FORALL v_count IN 1..v_updates
+        INSERT INTO aud_emp
+             VALUES v_emp_changes(v_count);
+
+    v_emp_changes.delete();
+    v_index := 0; --resetting threshold for next bulk-insert.
+
+  END flush_logs;
+
+  AFTER EACH ROW
+  IS
+  BEGIN
+        
+    IF INSERTING THEN
+        v_index := v_index + 1;
+        v_emp_changes(v_index).upd_dt       := SYSDATE;
+        v_emp_changes(v_index).upd_by       := SYS_CONTEXT ('USERENV', 'SESSION_USER');
+        v_emp_changes(v_index).emp_id       := :NEW.emp_id;
+        v_emp_changes(v_index).action       := 'Create';
+        v_emp_changes(v_index).field        := '*';
+        v_emp_changes(v_index).from_value   := 'NULL';
+        v_emp_changes(v_index).to_value     := '*';
+
+    ELSIF UPDATING THEN
+        IF (   (:OLD.EMP_ID <> :NEW.EMP_ID)
+                OR (:OLD.EMP_ID IS     NULL AND :NEW.EMP_ID IS NOT NULL)
+                OR (:OLD.EMP_ID IS NOT NULL AND :NEW.EMP_ID IS     NULL)
+                  )
+             THEN
+                v_index := v_index + 1;
+                v_emp_changes(v_index).upd_dt       := SYSDATE;
+                v_emp_changes(v_index).upd_by       := SYS_CONTEXT ('USERENV', 'SESSION_USER');
+                v_emp_changes(v_index).emp_id       := :NEW.emp_id;
+                v_emp_changes(v_index).field        := 'EMP_ID';
+                v_emp_changes(v_index).from_value   := to_char(:OLD.EMP_ID);
+                v_emp_changes(v_index).to_value     := to_char(:NEW.EMP_ID);
+                v_emp_changes(v_index).action       := 'Update';
+          END IF;
+        
+        IF (   (:OLD.NAME <> :NEW.NAME)
+                OR (:OLD.NAME IS     NULL AND :NEW.NAME IS NOT NULL)
+                OR (:OLD.NAME IS NOT NULL AND :NEW.NAME IS     NULL)
+                  )
+             THEN
+                v_index := v_index + 1;
+                v_emp_changes(v_index).upd_dt       := SYSDATE;
+                v_emp_changes(v_index).upd_by       := SYS_CONTEXT ('USERENV', 'SESSION_USER');
+                v_emp_changes(v_index).emp_id       := :NEW.emp_id;
+                v_emp_changes(v_index).field        := 'NAME';
+                v_emp_changes(v_index).from_value   := to_char(:OLD.NAME);
+                v_emp_changes(v_index).to_value     := to_char(:NEW.NAME);
+                v_emp_changes(v_index).action       := 'Update';
+          END IF;
+                       
+        IF (   (:OLD.SALARY <> :NEW.SALARY)
+                OR (:OLD.SALARY IS     NULL AND :NEW.SALARY IS NOT NULL)
+                OR (:OLD.SALARY IS NOT NULL AND :NEW.SALARY IS     NULL)
+                  )
+             THEN
+                v_index := v_index + 1;
+                v_emp_changes(v_index).upd_dt      := SYSDATE;
+                v_emp_changes(v_index).upd_by      := SYS_CONTEXT ('USERENV', 'SESSION_USER');
+                v_emp_changes(v_index).emp_id      := :NEW.emp_id;
+                v_emp_changes(v_index).field       := 'SALARY';
+                v_emp_changes(v_index).from_value  := to_char(:OLD.SALARY);
+                v_emp_changes(v_index).to_value    := to_char(:NEW.SALARY);
+                v_emp_changes(v_index).action      := 'Update';
+          END IF;
+                       
+    END IF;
+
+    IF v_index >= v_threshhold THEN
+      flush_logs();
+    END IF;
+
+   END AFTER EACH ROW;
+
+  -- AFTER STATEMENT Section:
+  AFTER STATEMENT IS
+  BEGIN
+     flush_logs();
+  END AFTER STATEMENT;
+
+END aud_emp;
+/
+
+INSERT INTO employees VALUES (1, 'emp1', 10000);
+INSERT INTO employees VALUES (2, 'emp2', 20000);
+INSERT INTO employees VALUES (3, 'emp3', 16000);
+
+UPDATE employees 
+   SET salary = 2000
+ WHERE salary > 15000;
+
+SELECT * FROM aud_emp;
+
+
+ What is Ref Cursor :
+ ------------------
+
+-->It is aslo a user defined type
+-->ref cursor allows you to declare the  cursor variable those 
+   are independent of select statement
+   ie., the cursor variable declared using ref cursor type is 
+   ready to accept any select statement dynamically at the time 
+   of opening
+
+-->Ref cursor are of two types
+
+  1) A Strong ref cursor(also called static structure type)
+2)Weak ref cursor(also  called dynamic structure type )
+
+1)Strong ref cursor:
+-->When return type included then it is called strong or static 
+   structure type
+-->static ref cursor support different  type of select statement 
+   but all of same strucure ,but not neccessary that the table 
+   should be same
+
+2)Weak Ref  Cursor:
+  this ref cursor allows us to any  type of select statement 
+  irrespective of data structure ie., any table
+
+Ref Cursor:
+
+Syntax:
+  type <typename> is ref cursor [return <returntype>];
+
+syntax for open statement:
+  open <cursorvariable> for select statement .......;
+
+
+example
+-------
+--------Strong cursor ----------------------
+
+ declare
+
+ type emprefcur is ref cursor return emp%rowtype;
+ ec emprefcur;
+ v_ec ec%rowtype;
+begin
+  open ec for select * from emp;
+ loop
+	 fetch ec into v_ec;
+ 	exit when ec%notfound;
+	dbms_output.put_line(v_Ec.empno|| v_ec.ename);
+	
+ end loop;
+close ec;
+end;
+
+ print('-------------------------------------------------------------------------'):
+  open ec for select * from emp;
+ loop
+	 fetch ec into v_ec;
+ 	exit when ec%notfound;
+	print(v_Ec.empno);
+	print(v_ec.ename);
+ end loop;
+close ec;
+
+ end;
+
+
+Weak cursor example
+-------------
+
+declare
+------------------weak cursor --------------------------
+type refcur is ref cursor;
+ xc refcur;
+v_Ec emp%rowtype;
+v_dc dept%rowtype;
+begin
+  open xc for select * from emp;
+loop
+	fetch xc into v_ec;
+ exit when xc%notfound;
+  dbms_output.put_line(v_ec.ename||v_Ec.empno);
+  
+end loop;
+
+close xc;
+
+
+open xc for select * from dept;
+loop
+	fetch xc into v_dc;
+	exit  when xc%notfound;
+  dbms_output.put_line(v_dc.deptno||v_dc.dname||v_dc.loc);
+ 
+end loop;
+close xc;
+
+end;
+
+
+
+
+
+
+
+
+
